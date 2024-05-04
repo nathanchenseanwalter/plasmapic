@@ -4,6 +4,7 @@ if __name__ == "__main__":
     print("Running main script...")
     # Import the necessary modules
     import numpy as np
+    np.set_printoptions(threshold=np.inf, edgeitems=30, linewidth=100000)
     import matplotlib.pyplot as plt
     
     from pic.grid import Grid, make_array, make_vector
@@ -18,7 +19,7 @@ if __name__ == "__main__":
     pusher = leapfrog
     
     # Set up grid parameters
-    h = 0.01
+    h = 0.05
     length = 4.0
     height = 2.0
     h_wall = height / 5
@@ -28,12 +29,14 @@ if __name__ == "__main__":
     # Set electric potentials
     Vin = 1000
     Vout = 0
-    Vwall = 3000
+    Vwall = 2000
 
     # Initialize the objects
     grid = Grid(h, length, height, h_wall, w_wall, x_wall, Vin, Vout, Vwall)
     # particles = Particles(n_particles)
     fields = ElectricField(grid)
+    
+    print(fields.V)
 
     plt.figure()
     plt.contourf(grid.Xs, grid.Ys, make_array(grid.get_b(), grid.Nx, grid.Ny))
@@ -43,9 +46,9 @@ if __name__ == "__main__":
     plt.contourf(grid.Xs, grid.Ys, fields.V)
     plt.colorbar()
     
-    import plotly.graph_objects as go
-    fig = go.Figure(data=[go.Surface(z=fields.V, x=grid.Xs, y=grid.Ys)])
-    fig.update_layout(width=700, height=700)
+    # import plotly.graph_objects as go
+    # fig = go.Figure(data=[go.Surface(z=fields.V, x=grid.Xs, y=grid.Ys)])
+    # fig.update_layout(width=700, height=700)
+    # fig.show()
     
-    fig.show()
     plt.show()
