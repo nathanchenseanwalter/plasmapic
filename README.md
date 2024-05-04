@@ -1,5 +1,19 @@
-# plasmapic
-APC 523 Final Project
+# Particle in Cell Simulation for Plasma
+
+2024 Spring APC 523 Final Project
+
+Group Members
+---
+
+- Nathaniel CHEN
+- Yigit Gunsur ELMACIOGLU
+- Kian ORR
+- Dario PANICI
+
+
+Usefull Links
+---
+To be deleted, 
 
 Finite Difference
 https://www.particleincell.com/2011/finite-difference-method/
