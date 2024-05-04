@@ -15,10 +15,10 @@ def euler(x, v, a, dt):
         tuple: Updated position and velocity of the particle after the push.
     """
     # Update velocity using acceleration
-    v_new = v + a(x, v) * dt
-
+    v_new = v + a(x) * dt
     # Update position using updated velocity
     x_new = x + v_new * dt
+    # print("Acceleration = ", a(x))  
 
     return x_new, v_new
 
@@ -37,16 +37,16 @@ def rk4(x, v, a, dt):
         tuple: Updated position and velocity of the particle after the push.
     """
     # Define the RK4 coefficients
-    k1_v = a(x, v)
+    k1_v = a(x)
     k1_x = v
 
-    k2_v = a(x + 0.5 * dt * k1_x, v + 0.5 * dt * k1_v)
+    k2_v = a(x + 0.5 * dt * k1_x)
     k2_x = v + 0.5 * dt * k1_v
 
-    k3_v = a(x + 0.5 * dt * k2_x, v + 0.5 * dt * k2_v)
+    k3_v = a(x + 0.5 * dt * k2_x)
     k3_x = v + 0.5 * dt * k2_v
 
-    k4_v = a(x + dt * k3_x, v + dt * k3_v)
+    k4_v = a(x + dt * k3_x)
     k4_x = v + dt * k3_v
 
     # Update position and velocity using RK4
@@ -71,13 +71,13 @@ def leapfrog(x, v, a, dt, use_verlet=False):
     """
     if use_verlet:
         # Velocity Verlet algorithm
-        x_new = x + v * dt + 0.5 * a * dt**2
+        x_new = x + v * dt + 0.5 * a(x) * dt**2
         v_new = v + 0.5 * (a + a) * dt
     else:
         # Leapfrog algorithm
-        v_half = v + 0.5 * a * dt
+        v_half = v + 0.5 * a(x) * dt
         x_new = x + v_half * dt
-        v_new = v_half + 0.5 * a * dt
+        v_new = v_half + 0.5 * a(x) * dt
 
     return x_new, v_new
 

@@ -86,14 +86,12 @@ class Grid:
                     b[id] = self.Vwall
                 # Dirichlet Boundary Condition at bottom
                 elif j == 0:
-                    data.append(np.array([id, id, -2/h**2]))
-                    data.append(np.array([id, id+1, 1/h**2]))
-                    data.append(np.array([id, id-1, 1/h**2]))
+                    data.append(np.array([id, id, 1]))
+                    data.append(np.array([id, id+self.Ny, -1]))
                 # Dirichlet Boundary Condition at top
                 elif j == self.Ny - 1:
-                    data.append(np.array([id, id, -2/h**2]))
-                    data.append(np.array([id, id+1, 1/h**2]))
-                    data.append(np.array([id, id-1, 1/h**2]))
+                    data.append(np.array([id, id, 1]))
+                    data.append(np.array([id, id-self.Ny, -1]))
                 # Rest of the domain with standar Laplacian
                 else:
                     data.append(np.array([id, id, -4/h**2]))
