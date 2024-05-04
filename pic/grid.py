@@ -72,21 +72,29 @@ class Grid:
             for j in range(self.Ny):
                 id = i * self.Ny + j
                 
+                # Inlet Boundary Condition
                 if i == 0:
                     data.append(np.array([id, id, 1]))
                     b[id] = self.Vin
+                # Outlet Boundary Condition
                 elif i == self.Nx - 1:
                     data.append(np.array([id, id, 1]))
                     b[id] = self.Vout
+                # Wall Boundary Condition
                 elif (i >= int(self.x_wall / h) and i <= int((self.x_wall + self.w_wall) / h)) and (j <= int(self.h_wall / h)):
                     data.append(np.array([id, id, 1]))
                     b[id] = self.Vwall
+                # Dirichlet Boundary Condition at bottom
                 elif j == 0:
-                    data.append(np.array([id, id, 1]))
-                    data.append(np.array([id, id+self.Ny, -1]))
+                    data.append(np.array([id, id, -2/h**2]))
+                    data.append(np.array([id, id+1, 1/h**2]))
+                    data.append(np.array([id, id-1, 1/h**2]))
+                # Dirichlet Boundary Condition at top
                 elif j == self.Ny - 1:
-                    data.append(np.array([id, id, 1]))
-                    data.append(np.array([id, id-self.Ny, -1]))
+                    data.append(np.array([id, id, -2/h**2]))
+                    data.append(np.array([id, id+1, 1/h**2]))
+                    data.append(np.array([id, id-1, 1/h**2]))
+                # Rest of the domain with standar Laplacian
                 else:
                     data.append(np.array([id, id, -4/h**2]))
                     data.append(np.array([id, id+self.Ny, 1/h**2]))
