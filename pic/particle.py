@@ -23,7 +23,7 @@ class Particles:
         self.velocities[:, 0] = abs(self.velocities[:, 0])
         self.velocities[:, 1] = 0
 
-    def push(self, pusher, electric_field, dt):
+    def push(self, pusher, electric_field, dt, grid):
         """
         Push particles using the specified pusher function.
 
@@ -32,14 +32,21 @@ class Particles:
             electric_field (callable): Electric field function.
             magnetic_field (callable): Magnetic field function.
             dt (float): Time step.
+            grid (Grid): Grid class.
         """
         for i in range(self.num):
             x = self.positions[i]
+            print(np.shape(x))
             v = self.velocities[i]
             # print("x = ", x)
             # print("v = ", v)
             a = lambda pos: Q*electric_field.get_field_at(pos)/M;
             x_new, v_new = pusher(x, v, a, dt)
+            bottom_wall = (x_new[1] == 0 and x_new[0] <= grid.x_wall) or (x_new[1] == 0 and x >= grid.x_wall + grid.w_wall)
+            top_wall = x_new[1] == grid.height
+            if bottom_wall or top_wall:
+                v_new[1] = - v_new[1]
+
             # print("x_new = ", x_new)    
             # print("v_new = ", v_new)
             self.positions[i] = x_new
