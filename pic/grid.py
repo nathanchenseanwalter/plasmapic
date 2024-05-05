@@ -103,20 +103,31 @@ class Grid:
 
                 # Neumann Boundary Condition at bottom
                 elif j == 0:
+                    # make it so that we have an eqn that says
+                    # phi_i,j = phi_i,j+1 i.e. that the deriv is zero
+                    # i,j term of potential
                     data.append(np.array([id, id, 1]))
+                    # i, j+1 term
                     data.append(np.array([id, id + 1, -1]))
 
                 # Neumann Boundary Condition at top
                 elif j == self.Ny - 1:
+                    # make it so that we have an eqn that says
+                    # phi_i,j = phi_i,j-1 i.e. that the deriv is zero
                     data.append(np.array([id, id, 1]))
                     data.append(np.array([id, id - 1, -1]))
 
                 # Rest of the domain with standar Laplacian
                 else:
+                    # the i,j term
                     data.append(np.array([id, id, -4 / h**2]))
+                    # the (i+1),j term
                     data.append(np.array([id, id + self.Ny, 1 / h**2]))
+                    # the (i-1), j term
                     data.append(np.array([id, id - self.Ny, 1 / h**2]))
+                    # the i, j+1 term
                     data.append(np.array([id, id + 1, 1 / h**2]))
+                    # the i, j-1 term
                     data.append(np.array([id, id - 1, 1 / h**2]))
 
         data = np.array(data)
