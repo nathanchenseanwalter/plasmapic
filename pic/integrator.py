@@ -1,13 +1,15 @@
 """Implementations of particle pushers for PIC simulations."""
+
 import numpy as np
+
 
 def euler(x, v, a, dt):
     """
     Implements the Euler forward method for particle pushing.
 
     Args:
-        x (numpy.ndarray): Initial position of the particle (3D vector).
-        v (numpy.ndarray): Initial velocity of the particle (3D vector).
+        x (numpy.ndarray): Initial position of the particle (2D vector).
+        v (numpy.ndarray): Initial velocity of the particle (2D vector).
         a (callable): Acceleration function that takes position and velocity as arguments.
         dt (float): Time step.
 
@@ -18,7 +20,7 @@ def euler(x, v, a, dt):
     v_new = v + a(x) * dt
     # Update position using updated velocity
     x_new = x + v_new * dt
-    # print("Acceleration = ", a(x))  
+    # print("Acceleration = ", a(x))
 
     return x_new, v_new
 
@@ -28,8 +30,8 @@ def rk4(x, v, a, dt):
     Implements the fourth-order Runge-Kutta (RK4) method for particle pushing.
 
     Args:
-        x (numpy.ndarray): Initial position of the particle (3D vector).
-        v (numpy.ndarray): Initial velocity of the particle (3D vector).
+        x (numpy.ndarray): Initial position of the particle (2D vector).
+        v (numpy.ndarray): Initial velocity of the particle (2D vector).
         a (callable): Acceleration function that takes position and velocity as arguments.
         dt (float): Time step.
 
@@ -55,14 +57,15 @@ def rk4(x, v, a, dt):
 
     return x_new, v_new
 
+
 def leapfrog(x, v, a, dt, use_verlet=False):
     """
     Implements the leapfrog algorithm for particle pushing.
 
     Args:
-        x (numpy.ndarray): Initial position of the particle (3D vector).
-        v (numpy.ndarray): Initial velocity of the particle (3D vector).
-        a (numpy.ndarray): Acceleration of the particle (3D vector).
+        x (numpy.ndarray): Initial position of the particle (2D vector).
+        v (numpy.ndarray): Initial velocity of the particle (2D vector).
+        a (numpy.ndarray): Acceleration of the particle (2D vector).
         dt (float): Time step.
         use_verlet (bool): Flag to use velocity Verlet algorithm (default: False).
 
@@ -81,15 +84,16 @@ def leapfrog(x, v, a, dt, use_verlet=False):
 
     return x_new, v_new
 
+
 def boris(x, v, E, B, q, m, dt):
     """
     Implements the Boris algorithm for particle pushing.
 
     Args:
-        x (numpy.ndarray): Initial position of the particle (3D vector).
-        v (numpy.ndarray): Initial velocity of the particle (3D vector).
-        E (numpy.ndarray): Electric field (3D vector).
-        B (numpy.ndarray): Magnetic field (3D vector).
+        x (numpy.ndarray): Initial position of the particle (2D vector).
+        v (numpy.ndarray): Initial velocity of the particle (2D vector).
+        E (numpy.ndarray): Electric field (2D vector).
+        B (numpy.ndarray): Magnetic field (2D vector).
         q (float): Charge of the particle.
         m (float): Mass of the particle.
         dt (float): Time step.
