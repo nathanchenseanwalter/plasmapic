@@ -47,15 +47,12 @@ if __name__ == "__main__":
         if k == 0:
             for j in range(n_particles):
                 paths[j] = [np.array(particles.get_position(j))]
-<<<<<<< HEAD
                 r = particles.get_position(j)
                 v = particles.get_velocity(j)
                 K = 0.5 * particles.M * np.linalg.norm(v)
                 U = particles.Q * fields.get_field_at(r)
                 energies[j] = [K + U]
 
-=======
->>>>>>> 3381e1e9cf5a9812ff42f10acd3d09f402afcf31
         particles.push(pusher, fields, dt, grid)
         for j in range(n_particles):
             paths[j].append(np.array(particles.get_position(j)))
