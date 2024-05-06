@@ -53,18 +53,38 @@ class ElectricField:
         """Return the electric field at a given position."""
         return np.array([self.fEx(x[0], x[1]), self.fEy(x[0], x[1])]).flatten()
 
-    def plot_E_field(self):
+    def plot_E_field(self, new_fig=True):
         """Plot the electric field."""
-        plt.figure()
+        if new_fig:
+            plt.figure()
         plt.quiver(self.grid.Xs, self.grid.Ys, self.Ex, self.Ey, color="b")
-        plt.title("Electric Field")
+        plt.gca().add_patch(
+            plt.Rectangle(
+                (self.grid.x_wall, 0),
+                self.grid.w_wall,
+                self.grid.h_wall,
+                edgecolor="k",
+                facecolor="none",
+            )
+        )
+        plt.title("Electric Field Vector")
         plt.xlabel("x")
         plt.ylabel("y")
 
-    def plot_contour_V(self):
-        plt.figure()
-        plt.contourf(self.grid.Xs, self.grid.Ys, self.V)
+    def plot_contour_V(self, res=20, new_fig=True):
+        if new_fig:
+            plt.figure()
+        plt.contourf(self.grid.Xs, self.grid.Ys, self.V, res)
+        plt.gca().add_patch(
+            plt.Rectangle(
+                (self.grid.x_wall, 0),
+                self.grid.w_wall,
+                self.grid.h_wall,
+                edgecolor="k",
+                facecolor="none",
+            )
+        )
         plt.colorbar()
-        plt.title("Electric Potential")
+        plt.title("Electric Potential (V)")
         plt.xlabel("x")
         plt.ylabel("y")

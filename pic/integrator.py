@@ -20,10 +20,6 @@ def euler(x, v, a, dt):
     v_new = v + a(x) * dt
     # Update position using updated velocity
     x_new = x + v_new * dt
-    # print(f"{x=}")
-    # print(f"{v=}")
-
-    # print("Acceleration = ", a(x))
 
     return x_new, v_new
 
