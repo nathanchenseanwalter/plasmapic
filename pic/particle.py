@@ -16,6 +16,7 @@ class Particles:
 
         Args:
             n_particles (int): Number of particles to create.
+            height (float): Height of the simulation domain.
         """
 
         self.num = n_particles
@@ -33,15 +34,12 @@ class Particles:
         Args:
             pusher (callable): Particle pusher function.
             electric_field (callable): Electric field function.
-            magnetic_field (callable): Magnetic field function.
             dt (float): Time step.
             grid (Grid): Grid class.
         """
         for i in range(self.num):
             x = self.positions[i]
             v = self.velocities[i]
-            # print("x = ", x)
-            # print("v = ", v)
             a = lambda pos: Q * electric_field.get_field_at(pos) / M
             x_new, v_new = pusher(x, v, a, dt)
 
@@ -79,14 +77,14 @@ class Particles:
         return self.velocities
 
     def get_position(self, i):
-        """Return the particle position."""
+        """Return the position of i th particle."""
         if i >= self.num:
             raise IndexError("Particle index out of range.")
         else:
             return self.positions[i]
 
     def get_velocity(self, i):
-        """Return the particle velocity."""
+        """Return the velocity of i th particle."""
         if i >= self.num:
             raise IndexError("Particle index out of range.")
         else:

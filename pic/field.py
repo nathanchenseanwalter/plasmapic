@@ -65,6 +65,6 @@ class ElectricField:
         plt.figure()
         plt.contourf(self.grid.Xs, self.grid.Ys, self.V)
         plt.colorbar()
-        plt.title("Electric Potential")
+        plt.title("Electric Potential (V)")
         plt.xlabel("x")
         plt.ylabel("y")
