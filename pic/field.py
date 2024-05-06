@@ -61,9 +61,9 @@ class ElectricField:
         plt.xlabel("x")
         plt.ylabel("y")
 
-    def plot_contour_V(self):
+    def plot_contour_V(self, res=100):
         plt.figure()
-        plt.contourf(self.grid.Xs, self.grid.Ys, self.V)
+        plt.contourf(self.grid.Xs, self.grid.Ys, self.V, res)
         plt.colorbar()
         plt.title("Electric Potential")
         plt.xlabel("x")
