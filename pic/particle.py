@@ -21,7 +21,7 @@ class Particles:
         self.num = n_particles
         self.positions = np.random.rand(n_particles, 2)
         self.positions[:, 0] = 0
-        self.positions[:, 1] = 0.0025
+        self.positions[:, 1] *= height
         self.velocities = np.random.rand(n_particles, 2)
         self.velocities[:, 0] = abs(self.velocities[:, 0])
         self.velocities[:, 1] = 0
@@ -48,7 +48,7 @@ class Particles:
             bottom_boundary = (x_new[1] <= 0 and x_new[0] <= grid.x_wall) or (x_new[1] <= 0 and x >= (grid.x_wall + grid.w_wall))
             top_boundary = x_new[1] >= grid.height
             right_boundary = x_new[0] >= grid.length
-            
+
             left_wall = x_new[0] >= grid.x_wall
             right_wall = x_new[0] <= (grid.x_wall + grid.w_wall)
             top_wall = x_new[1] <= grid.h_wall
