@@ -42,9 +42,16 @@ class Particles:
             # print("v = ", v)
             a = lambda pos: Q*electric_field.get_field_at(pos)/M;
             x_new, v_new = pusher(x, v, a, dt)
-            bottom_wall = (x_new[1] == 0 and x_new[0] <= grid.x_wall) or (x_new[1] == 0 and x >= grid.x_wall + grid.w_wall)
-            top_wall = x_new[1] == grid.height
-            if bottom_wall or top_wall:
+
+            bottom_boundary = (x_new[1] == 0 and x_new[0] <= grid.x_wall) or (x_new[1] == 0 and x >= grid.x_wall + grid.w_wall)
+            top_boundary = x_new[1] == grid.height
+            left_wall = x_new[0] == grid.x_wall
+            right_wall = x_new[0] == grid.x_wall + grid.w_wall
+            top_wall = (x_new[0] >= grid.x_wall and x_new[0] <= (grid.x_wall + grid.w_wall)) and x_new[1] == grid.h_wall
+            wall = left_wall or right_wall or top_wall
+            
+
+            if bottom_boundary or top_boundary or wall:
                 v_new[1] = - v_new[1]
 
             # print("x_new = ", x_new)    

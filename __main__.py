@@ -13,7 +13,7 @@ if __name__ == "__main__":
     from pic.integrator import euler, rk4, leapfrog
     
     # Set up the simulation parameters
-    n_particles = 1
+    n_particles = 100
     n_steps = 100
     dt = 1e-7
     pusher = euler
@@ -35,10 +35,11 @@ if __name__ == "__main__":
     grid = Grid(h, length, height, h_wall, w_wall, x_wall, Vin, Vout, Vwall)
     particles = Particles(n_particles, height)
     fields = ElectricField(grid)
+    plt.scatter(particles.positions[:, 0], particles.velocities[:, 0])
     
     # path = []
     # for _ in range(n_steps):
-    #     particles.push(pusher, fields, dt)
+    #     particles.push(pusher, fields, dt, grid)
     #     path.append(np.array(particles.get_position(0)))
     # path = np.array(path)
     # plt.figure()
