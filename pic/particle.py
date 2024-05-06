@@ -57,7 +57,7 @@ class Particles:
             wall = left_wall and right_wall and top_wall
 
             if top_boundary or bottom_boundary:
-                v_new[0] = -v_new[0]
+                v_new[1] = -v_new[1]
             elif right_boundary:
                 v_new = np.array([0, 0])
                 x_new = x.copy()

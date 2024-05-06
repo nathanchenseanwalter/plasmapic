@@ -21,8 +21,8 @@ if __name__ == "__main__":
     from pic.particle import Q, M
 
     # Set up the simulation parameters
-    n_particles = 50
-    n_steps = 1000
+    n_particles = 10
+    n_steps = 2000
 
     pusher = {"euler": euler, "rk4": rk4, "leapfrog": leapfrog}[method]
     print(f"Using {method} method for integration")
