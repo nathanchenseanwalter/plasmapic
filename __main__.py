@@ -46,15 +46,24 @@ if __name__ == "__main__":
         if k == 0:
             for j in range(n_particles):
                 paths[j] = [np.array(particles.get_position(j))]
-        particles.push(pusher, fields, dt)
+        particles.push(pusher, fields, dt, grid)
         for j in range(n_particles):
             paths[j].append(np.array(particles.get_position(j)))
     for j in range(n_particles):
         paths[j] = np.array(paths[j])
         plt.plot(paths[j][:, 0], paths[j][:, 1], linewidth=3, color="r")
-    plt.contourf(grid.Xs, grid.Ys, make_array(grid.get_b(), grid.Nx, grid.Ny))
+    fields.plot_contour_V(new_fig=False)
+    plt.gca().add_patch(
+        plt.Rectangle(
+            (grid.x_wall, 0),
+            grid.w_wall,
+            grid.h_wall,
+            edgecolor="k",
+            facecolor="none",
+        )
+    )
 
     fields.plot_E_field()
-    fields.plot_contour_V(res=1000)
+    fields.plot_contour_V()
 
     plt.show()
