@@ -10,7 +10,7 @@ M = 131.293 * 1.66053892 * 1e-27
 class Particles:
     """Class representing a collection of particles in a PIC simulation."""
 
-    def __init__(self, n_particles, height):
+    def __init__(self, n_particles, height, v0=20):
         """
         Initialize the particle object with random positions and velocities.
 
@@ -22,12 +22,12 @@ class Particles:
         self.num = n_particles
         self.Q = Q
         self.M = M
-        self.positions = np.random.rand(n_particles, 2)
-        self.positions[:, 0] = 0
-        self.positions[:, 1] *= height
-        self.velocities = np.random.rand(n_particles, 2)
-        self.velocities[:, 0] = abs(self.velocities[:, 0])
-        self.velocities[:, 1] = 0
+        self.positions = np.zeros((n_particles, 2))
+        self.positions[:, 1] = np.linspace(
+            height / 10, height, n_particles, endpoint=False
+        )
+        self.velocities = np.zeros((n_particles, 2))
+        self.velocities[:, 0] = v0
 
     def push(self, pusher, electric_field, dt, grid):
         """

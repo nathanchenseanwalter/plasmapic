@@ -14,7 +14,7 @@ if __name__ == "__main__":
     np.set_printoptions(threshold=np.inf, edgeitems=30, linewidth=100000)
     import matplotlib.pyplot as plt
 
-    from pic.grid import Grid, make_array
+    from pic.grid import Grid
     from pic.field import ElectricField
     from pic.particle import Particles
     from pic.integrator import euler, rk4, leapfrog
@@ -39,13 +39,14 @@ if __name__ == "__main__":
     Vin = 1100
     Vout = -100
     Vwall = 1000
+    v0 = 100  # initial velocity of the ions (m/s)
 
     dt = h / np.sqrt(2 * Q * (Vin - Vout) / M)
     print("dt = ", dt)
 
     # Initialize the objects
     grid = Grid(h, length, height, h_wall, w_wall, x_wall, Vin, Vout, Vwall)
-    particles = Particles(n_particles, height)
+    particles = Particles(n_particles, height, v0)
     fields = ElectricField(grid)
 
     plt.figure()
