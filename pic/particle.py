@@ -27,7 +27,7 @@ class Particles:
         self.velocities[:, 0] = abs(self.velocities[:, 0])
         self.velocities[:, 1] = 0
 
-    def push(self, pusher, electric_field, dt):
+    def push(self, pusher, electric_field, dt, grid):
         """
         Push particles using the specified pusher function.
 
@@ -35,12 +35,36 @@ class Particles:
             pusher (callable): Particle pusher function.
             electric_field (callable): Electric field function.
             dt (float): Time step.
+            grid (Grid): Grid class.
         """
         for i in range(self.num):
             x = self.positions[i]
             v = self.velocities[i]
             a = lambda pos: Q * electric_field.get_field_at(pos) / M
             x_new, v_new = pusher(x, v, a, dt)
+
+            bottom_boundary = (x_new[1] <= 0 and x_new[0] <= grid.x_wall) or (x_new[1] <= 0 and x >= (grid.x_wall + grid.w_wall))
+            top_boundary = x_new[1] >= grid.height
+            right_boundary = x_new[0] >= grid.length
+
+            left_wall = x_new[0] >= grid.x_wall
+            right_wall = x_new[0] <= (grid.x_wall + grid.w_wall)
+            top_wall = x_new[1] <= grid.h_wall
+            wall = left_wall and right_wall and top_wall
+
+
+            if top_boundary or bottom_boundary:
+                v_new[0] = - v_new[0]
+            elif right_boundary:
+                v_new = np.array([0, 0])
+                x_new = x.copy()
+            elif wall:
+                # if the particle passed throught the top wall
+                if (x[1] >= grid.h_wall and x_new[1] <= grid.h_wall):
+                    v_new[1] = - v_new[1]
+                else:
+                    v_new[0] = - v_new[0]
+                
             self.positions[i] = x_new
             self.velocities[i] = v_new
 
