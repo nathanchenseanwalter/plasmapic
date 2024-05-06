@@ -25,6 +25,7 @@ if __name__ == "__main__":
     n_steps = 1000
 
     pusher = {"euler": euler, "rk4": rk4, "leapfrog": leapfrog}[method]
+    print(f"Using {method} method for integration")
 
     # Set up grid parameters
     h = 1e-4
