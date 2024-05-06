@@ -1,5 +1,12 @@
 import numpy as np
 
+
+def B_update(x):
+    return np.array([0., 0., np.sqrt(x[0]**2 + x[1]**2)]);
+
+def E_update(x):
+    return np.array([x[0], x[1], 0])/np.sqrt(x[0]**2 + x[1]**2)*1e-2;
+
 def euler(x, v, a, dt):
     """
     Implements the Euler forward method for particle pushing.
@@ -79,6 +86,20 @@ def leapfrog(x, v, a, dt, use_verlet=False):
         v_new = v_half + 0.5 * a * dt
 
     return x_new, v_new
+
+def tajima_implicit(x, v, E, B, q, m, dt):
+    
+    v_minus_half = v - 0.5*q/m*E*dt;
+    B_mag = np.linalg.norm(B)
+    eps = q*B_mag/m*dt/2 # = omega*dt/2
+    R = 1/B_mag * np.array([[0, B[2], -B[1]], [-B[2], 0, B[0]], [B[1], -B[0], 0]])
+    M_minus = np.eye(3) - R * eps
+    M_plus = np.eye(3) + R * eps
+    M_inv = np.linalg.inv(M_minus) # matrix inversion
+    v = M_inv @ (M_plus @ v_minus_half) + M_inv @ E * q/m * dt
+    x = x + v*dt
+    
+    return x, v
 
 def boris(x, v, E, B, q, m, dt):
     """
