@@ -1,14 +1,14 @@
 """Main particle in cell simulator for plasma simulations."""
 
 if __name__ == "__main__":
-    print("Running main script...")
+    print("Running simulation...")
     # Import the necessary modules
     import numpy as np
 
     np.set_printoptions(threshold=np.inf, edgeitems=30, linewidth=100000)
     import matplotlib.pyplot as plt
 
-    from pic.grid import Grid, make_array, make_vector
+    from pic.grid import Grid, make_array
     from pic.field import ElectricField
     from pic.particle import Particles
     from pic.integrator import euler, rk4, leapfrog
