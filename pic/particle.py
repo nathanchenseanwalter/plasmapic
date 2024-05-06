@@ -21,7 +21,7 @@ class Particles:
         self.num = n_particles
         self.positions = np.random.rand(n_particles, 2)
         self.positions[:, 0] = 0
-        self.positions[:, 1] *= height
+        self.positions[:, 1] = 0.0025
         self.velocities = np.random.rand(n_particles, 2)
         self.velocities[:, 0] = abs(self.velocities[:, 0])
         self.velocities[:, 1] = 0
@@ -39,23 +39,34 @@ class Particles:
         """
         for i in range(self.num):
             x = self.positions[i]
-            print(np.shape(x))
             v = self.velocities[i]
             # print("x = ", x)
             # print("v = ", v)
             a = lambda pos: Q * electric_field.get_field_at(pos) / M
             x_new, v_new = pusher(x, v, a, dt)
 
-            bottom_boundary = (x_new[1] == 0 and x_new[0] <= grid.x_wall) or (x_new[1] == 0 and x >= grid.x_wall + grid.w_wall)
-            top_boundary = x_new[1] == grid.height
-            left_wall = x_new[0] == grid.x_wall
-            right_wall = x_new[0] == grid.x_wall + grid.w_wall
-            top_wall = (x_new[0] >= grid.x_wall and x_new[0] <= (grid.x_wall + grid.w_wall)) and x_new[1] == grid.h_wall
-            wall = left_wall or right_wall or top_wall
-        
-            if bottom_boundary or top_boundary or wall:
-                v_new[1] = - v_new[1]
+            bottom_boundary = (x_new[1] <= 0 and x_new[0] <= grid.x_wall) or (x_new[1] <= 0 and x >= (grid.x_wall + grid.w_wall))
+            top_boundary = x_new[1] >= grid.height
+            right_boundary = x_new[0] >= grid.length
+            
+            left_wall = x_new[0] >= grid.x_wall
+            right_wall = x_new[0] <= (grid.x_wall + grid.w_wall)
+            top_wall = x_new[1] <= grid.h_wall
+            wall = left_wall and right_wall and top_wall
 
+
+            if top_boundary or bottom_boundary:
+                v_new[0] = - v_new[0]
+            elif right_boundary:
+                v_new = np.array([0, 0])
+                x_new = x.copy()
+            elif wall:
+                # if the particle passed throught the top wall
+                if (x[1] >= grid.h_wall and x_new[1] <= grid.h_wall):
+                    v_new[1] = - v_new[1]
+                else:
+                    v_new[0] = - v_new[0]
+                
             self.positions[i] = x_new
             self.velocities[i] = v_new
 
