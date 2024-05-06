@@ -5,10 +5,12 @@ if __name__ == "__main__":
     # Import the necessary modules
     import sys
 
+    methods = []
     if len(sys.argv) > 1:
-        method = str(sys.argv[1])
+        methods = [str(sys.argv[i]) for i in range(1, len(sys.argv))]
     else:
-        method = "euler"
+        methods = ["rk4"]
+
     import numpy as np
 
     np.set_printoptions(threshold=np.inf, edgeitems=30, linewidth=100000)
@@ -20,16 +22,9 @@ if __name__ == "__main__":
     from pic.integrator import euler, rk4, leapfrog
     from pic.particle import Q, M
 
-    # Set up the simulation parameters
-    n_particles = 10
-    n_steps = 2000
-
-    pusher = {"euler": euler, "rk4": rk4, "leapfrog": leapfrog}[method]
-    print(f"Using {method} method for integration")
-
     # Set up grid parameters
     h = 1e-4
-    length = 0.05
+    length = 0.1
     height = 0.02
     h_wall = height / 5
     w_wall = length / 5
@@ -41,38 +36,64 @@ if __name__ == "__main__":
     Vwall = 1000
     v0 = 100  # initial velocity of the ions (m/s)
 
-    dt = h / np.sqrt(2 * Q * (Vin - Vout) / M)
+    dt = h * 1 / np.sqrt(2 * Q * (Vin - Vout) / M)
     print("dt = ", dt)
 
-    # Initialize the objects
-    grid = Grid(h, length, height, h_wall, w_wall, x_wall, Vin, Vout, Vwall)
-    particles = Particles(n_particles, height, v0)
-    fields = ElectricField(grid)
+    # Set up the simulation parameters
+    n_particles = 1
+    n_steps = 10000
 
+    pushers = {"euler": euler, "rk4": rk4, "leapfrog": leapfrog}
+    print(f"Using {methods} method for integration")
+
+
+    fig, ax = plt.subplots()
+    colors = ["red", "blue", "green"]
     plt.figure()
-    paths = {}
-    energies = {}
-    for k in range(n_steps):
-        if k == 0:
+    for i, method in enumerate(methods):
+        pusher = pushers[method]
+        # Initialize the objects
+        grid = Grid(h, length, height, h_wall, w_wall, x_wall, Vin, Vout, Vwall)
+        particles = Particles(n_particles, height, v0)
+        fields = ElectricField(grid)
+
+        paths = {}
+        energies = {}
+        for k in range(n_steps):
+            if k == 0:
+                for j in range(n_particles):
+                    paths[j] = [np.array(particles.get_position(j))]
+                    r = particles.get_position(j)
+                    v = particles.get_velocity(j)
+                    K = 0.5 * particles.M * np.linalg.norm(v) ** 2
+                    U = particles.Q * fields.get_potential_at(r)
+                    energies[j] = [K + U]
+
+            particles.push(pusher, fields, dt, grid)
             for j in range(n_particles):
-                paths[j] = [np.array(particles.get_position(j))]
+                paths[j].append(np.array(particles.get_position(j)))
                 r = particles.get_position(j)
                 v = particles.get_velocity(j)
                 K = 0.5 * particles.M * np.linalg.norm(v) ** 2
-                U = particles.Q * fields.get_field_at(r)
-                energies[j] = [K + U]
+                U = particles.Q * fields.get_potential_at(r)
+                energies[j].append(K + U)
 
-        particles.push(pusher, fields, dt, grid)
+            if r[0] >= length:
+                break
+
         for j in range(n_particles):
-            paths[j].append(np.array(particles.get_position(j)))
-            r = particles.get_position(j)
-            v = particles.get_velocity(j)
-            K = 0.5 * particles.M * np.linalg.norm(v) ** 2
-            U = particles.Q * fields.get_field_at(r)
-            energies[j].append(K + U)
-    for j in range(n_particles):
-        paths[j] = np.array(paths[j])
-        plt.plot(paths[j][:, 0], paths[j][:, 1], linewidth=3, color="r")
+            E = energies[j]
+            print(np.shape(E))
+            ax.plot(np.arange(len(E[:-2])), E[:-2], label=method)
+            # ax.vlines(ymin=)
+            # ax.plot(np.arange(len(E)), E)
+            ax.set_xlabel("step number")
+            ax.set_ylabel("Total Energy")
+            ax.legend()
+
+        for j in range(n_particles):
+            paths[j] = np.array(paths[j])
+            plt.plot(paths[j][:-2, 0], paths[j][:-2, 1], linewidth=3, color=colors[i])
     fields.plot_contour_V(new_fig=False)
     plt.gca().add_patch(
         plt.Rectangle(
@@ -83,20 +104,16 @@ if __name__ == "__main__":
             facecolor="none",
         )
     )
-    plt.savefig(f"trajectories_{method}.png")
+        # plt.gca().set_xlim([0, length])
+        # plt.gca().set_ylim([0, height])
+        # plt.savefig(f"trajectories_{method}.png")
 
-    fields.plot_E_field()
-    plt.savefig("electric_field.png")
+        # fields.plot_E_field()
+        # plt.savefig("electric_field.png")
 
-    fields.plot_contour_V()
-    plt.savefig("potential.png")
+        # fields.plot_contour_V()
+        # plt.savefig("potential.png")
 
-    plt.figure()
-    for j in range(n_particles):
-        E = energies[j]
-        plt.plot(np.arange(len(E)), E, label=f"particle {j}")
-        plt.xlabel("step number")
-        plt.ylabel("Total Energy")
-        plt.legend()
+        
 
     plt.show()
