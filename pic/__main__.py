@@ -21,7 +21,7 @@ if __name__ == "__main__":
     from pic.particle import Q, M
 
     # Set up the simulation parameters
-    n_particles = 5
+    n_particles = 50
     n_steps = 1000
 
     pusher = {"euler": euler, "rk4": rk4, "leapfrog": leapfrog}[method]
@@ -58,7 +58,7 @@ if __name__ == "__main__":
                 paths[j] = [np.array(particles.get_position(j))]
                 r = particles.get_position(j)
                 v = particles.get_velocity(j)
-                K = 0.5 * particles.M * np.linalg.norm(v)
+                K = 0.5 * particles.M * np.linalg.norm(v) ** 2
                 U = particles.Q * fields.get_field_at(r)
                 energies[j] = [K + U]
 
@@ -67,7 +67,7 @@ if __name__ == "__main__":
             paths[j].append(np.array(particles.get_position(j)))
             r = particles.get_position(j)
             v = particles.get_velocity(j)
-            K = 0.5 * particles.M * np.linalg.norm(v)
+            K = 0.5 * particles.M * np.linalg.norm(v) ** 2
             U = particles.Q * fields.get_field_at(r)
             energies[j].append(K + U)
     for j in range(n_particles):
