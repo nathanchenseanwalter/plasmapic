@@ -67,7 +67,7 @@ class ElectricField:
                 facecolor="none",
             )
         )
-        plt.title("Electric Field")
+        plt.title("Electric Field (V/m)")
         plt.xlabel("x")
         plt.ylabel("y")
 

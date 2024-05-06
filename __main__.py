@@ -74,9 +74,13 @@ if __name__ == "__main__":
             facecolor="none",
         )
     )
+    plt.savefig("trajectories.png")
 
     fields.plot_E_field()
+    plt.savefig("electric_field.png")
+
     fields.plot_contour_V()
+    plt.savefig("potential.png")
 
     plt.figure()
     for j in range(n_particles):
