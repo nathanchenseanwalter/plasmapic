@@ -3,6 +3,12 @@
 if __name__ == "__main__":
     print("Running simulation...")
     # Import the necessary modules
+    import sys
+
+    if len(sys.argv) > 1:
+        method = str(sys.argv[1])
+    else:
+        method = "euler"
     import numpy as np
 
     np.set_printoptions(threshold=np.inf, edgeitems=30, linewidth=100000)
@@ -17,7 +23,8 @@ if __name__ == "__main__":
     # Set up the simulation parameters
     n_particles = 5
     n_steps = 1000
-    pusher = euler
+
+    pusher = {"euler": euler, "rk4": rk4, "leapfrog": leapfrog}[method]
 
     # Set up grid parameters
     h = 1e-4
@@ -74,7 +81,7 @@ if __name__ == "__main__":
             facecolor="none",
         )
     )
-    plt.savefig("trajectories.png")
+    plt.savefig(f"trajectories_{method}.png")
 
     fields.plot_E_field()
     plt.savefig("electric_field.png")
