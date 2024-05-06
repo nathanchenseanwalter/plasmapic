@@ -16,7 +16,7 @@ if __name__ == "__main__":
 
     # Set up the simulation parameters
     n_particles = 1
-    n_steps = 1000
+    n_steps = 10000
     pusher = euler
 
     # Set up grid parameters
@@ -40,14 +40,17 @@ if __name__ == "__main__":
     particles = Particles(n_particles, height)
     fields = ElectricField(grid)
 
+
+
     path = []
     for _ in range(n_steps):
-        particles.push(pusher, fields, dt)
+        particles.push(pusher, fields, dt, grid)
         path.append(np.array(particles.get_position(0)))
     path = np.array(path)
     plt.figure()
     plt.contourf(grid.Xs, grid.Ys, make_array(grid.get_b(), grid.Nx, grid.Ny))
-    plt.plot(path[:, 0], path[:, 1], linewidth=3, color="r")
+    plt.plot(path[:, 0], path[:, 1], linewidth=1, color='r', linestyle="--")
+    plt.contour(grid.Xs, grid.Ys, fields.V)
 
     fields.plot_E_field()
     fields.plot_contour_V()
