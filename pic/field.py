@@ -42,7 +42,7 @@ class ElectricField:
 
     def solve_E(self):
         """Solve for the electric field."""
-        Ex, Ey = np.gradient(self.V, self.grid.h)
+        Ey, Ex = np.gradient(self.V, self.grid.h)
         Ey[0, :] = 0
         Ey[-1, :] = 0
         Ex = -Ex

@@ -20,6 +20,9 @@ def euler(x, v, a, dt):
     v_new = v + a(x) * dt
     # Update position using updated velocity
     x_new = x + v_new * dt
+    # print(f"{x=}")
+    # print(f"{v=}")
+
     # print("Acceleration = ", a(x))
 
     return x_new, v_new
@@ -38,6 +41,11 @@ def rk4(x, v, a, dt):
     Returns:
         tuple: Updated position and velocity of the particle after the push.
     """
+
+    # print(f"{x=}")
+    # print(f"{v=}")
+
+    # print("Acceleration = ", a(x))
     # Define the RK4 coefficients
     k1_v = a(x)
     k1_x = v
