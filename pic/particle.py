@@ -20,6 +20,8 @@ class Particles:
         """
 
         self.num = n_particles
+        self.Q = Q
+        self.M = M
         self.positions = np.random.rand(n_particles, 2)
         self.positions[:, 0] = 0
         self.positions[:, 1] *= height
@@ -43,7 +45,9 @@ class Particles:
             a = lambda pos: Q * electric_field.get_field_at(pos) / M
             x_new, v_new = pusher(x, v, a, dt)
 
-            bottom_boundary = (x_new[1] <= 0 and x_new[0] <= grid.x_wall) or (x_new[1] <= 0 and x >= (grid.x_wall + grid.w_wall))
+            bottom_boundary = (x_new[1] <= 0 and x_new[0] <= grid.x_wall) or (
+                x_new[1] <= 0 and x >= (grid.x_wall + grid.w_wall)
+            )
             top_boundary = x_new[1] >= grid.height
             right_boundary = x_new[0] >= grid.length
 
@@ -52,19 +56,18 @@ class Particles:
             top_wall = x_new[1] <= grid.h_wall
             wall = left_wall and right_wall and top_wall
 
-
             if top_boundary or bottom_boundary:
-                v_new[0] = - v_new[0]
+                v_new[0] = -v_new[0]
             elif right_boundary:
                 v_new = np.array([0, 0])
                 x_new = x.copy()
             elif wall:
                 # if the particle passed throught the top wall
-                if (x[1] >= grid.h_wall and x_new[1] <= grid.h_wall):
-                    v_new[1] = - v_new[1]
+                if x[1] >= grid.h_wall and x_new[1] <= grid.h_wall:
+                    v_new[1] = -v_new[1]
                 else:
-                    v_new[0] = - v_new[0]
-                
+                    v_new[0] = -v_new[0]
+
             self.positions[i] = x_new
             self.velocities[i] = v_new
 

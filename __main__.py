@@ -15,7 +15,7 @@ if __name__ == "__main__":
     from pic.particle import Q, M
 
     # Set up the simulation parameters
-    n_particles = 10
+    n_particles = 5
     n_steps = 1000
     pusher = euler
 
@@ -42,13 +42,25 @@ if __name__ == "__main__":
 
     plt.figure()
     paths = {}
+    energies = {}
     for k in range(n_steps):
         if k == 0:
             for j in range(n_particles):
                 paths[j] = [np.array(particles.get_position(j))]
-        particles.push(pusher, fields, dt)
+                r = particles.get_position(j)
+                v = particles.get_velocity(j)
+                K = 0.5 * particles.M * np.linalg.norm(v)
+                U = particles.Q * fields.get_field_at(r)
+                energies[j] = [K + U]
+
+        particles.push(pusher, fields, dt, grid)
         for j in range(n_particles):
             paths[j].append(np.array(particles.get_position(j)))
+            r = particles.get_position(j)
+            v = particles.get_velocity(j)
+            K = 0.5 * particles.M * np.linalg.norm(v)
+            U = particles.Q * fields.get_field_at(r)
+            energies[j].append(K + U)
     for j in range(n_particles):
         paths[j] = np.array(paths[j])
         plt.plot(paths[j][:, 0], paths[j][:, 1], linewidth=3, color="r")
@@ -56,5 +68,13 @@ if __name__ == "__main__":
 
     fields.plot_E_field()
     fields.plot_contour_V(res=1000)
+
+    plt.figure()
+    for j in range(n_particles):
+        E = energies[j]
+        plt.plot(np.arange(len(E)), E, label=f"particle {j}")
+        plt.xlabel("step number")
+        plt.ylabel("Total Energy")
+        plt.legend()
 
     plt.show()
