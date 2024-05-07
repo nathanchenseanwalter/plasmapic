@@ -84,15 +84,15 @@ class ElectricField:
         if new_fig:
             plt.figure()
         plt.contourf(self.grid.Xs, self.grid.Ys, self.V, res)
-        plt.gca().add_patch(
-            plt.Rectangle(
-                (self.grid.x_wall, 0),
-                self.grid.w_wall,
-                self.grid.h_wall,
-                edgecolor="k",
-                facecolor="none",
-            )
-        )
+        # plt.gca().add_patch(
+        #     plt.Rectangle(
+        #         (self.grid.x_wall, 0),
+        #         self.grid.w_wall,
+        #         self.grid.h_wall,
+        #         edgecolor="k",
+        #         facecolor="none",
+        #     )
+        # )
         plt.colorbar()
         plt.title("Electric Potential (V)")
         plt.xlabel("x")

@@ -24,11 +24,11 @@ if __name__ == "__main__":
 
     # Set up grid parameters
     h = 1e-4
-    length = 0.07
+    length = 0.05
     height = 0.02
     h_wall = height / 5
     w_wall = length / 5
-    x_wall = 0.05
+    x_wall = 0.01
 
     # Set electric potentials
     Vin = 1100
@@ -36,7 +36,7 @@ if __name__ == "__main__":
     Vwall = 1000
     v0 = 100  # initial velocity of the ions (m/s)
 
-    dt = 1e-7  # h * 1 / np.sqrt(2 * Q * (Vin - Vout) / M)
+    dt = h * 10 / np.sqrt(2 * Q * (Vin - Vout) / M)
     print("dt = ", dt)
 
     # Set up the simulation parameters
@@ -46,9 +46,9 @@ if __name__ == "__main__":
     pushers = {"euler": euler, "rk4": rk4, "leapfrog": leapfrog}
     print(f"Using {methods} method for integration")
 
-    fig, ax = plt.subplots()
+    fig, axs = plt.subplots(1, 2, figsize=(10, 5))
     colors = ["red", "blue", "green"]
-    plt.figure()
+    linestyles = ["-", "-", "--"]
     for i, method in enumerate(methods):
         pusher = pushers[method]
         # Initialize the objects
@@ -82,18 +82,18 @@ if __name__ == "__main__":
 
         for j in range(n_particles):
             E = energies[j]
-            print(np.shape(E))
-            ax.plot(np.arange(len(E[:-2])), E[:-2], label=method)
-            # ax.vlines(ymin=)
-            # ax.plot(np.arange(len(E)), E)
-            ax.set_xlabel("step number")
-            ax.set_ylabel("Total Energy")
-            ax.legend()
+            axs[0].plot(np.arange(len(E[:-2])), E[:-2], label=method, linestyle=linestyles[i])
+            axs[0].set_xlabel("step number", fontsize=13)
+            axs[0].set_ylabel("Total Energy", fontsize=13)
+            axs[0].set_title("Energy with the wall", fontsize=14)
+            axs[0].legend()
+            plt.tight_layout()
 
         for j in range(n_particles):
             paths[j] = np.array(paths[j])
-            plt.plot(paths[j][:-2, 0], paths[j][:-2, 1], linewidth=3, color=colors[i])
-    fields.plot_contour_V(new_fig=False)
+            axs[1].plot(paths[j][:-2, 0], paths[j][:-2, 1], linewidth=3, color=colors[i])
+
+    p = axs[1].contourf(fields.grid.Xs, fields.grid.Ys, fields.V, 20)
     plt.gca().add_patch(
         plt.Rectangle(
             (grid.x_wall, 0),
@@ -103,14 +103,15 @@ if __name__ == "__main__":
             facecolor="none",
         )
     )
-    # plt.gca().set_xlim([0, length])
-    # plt.gca().set_ylim([0, height])
-    # plt.savefig(f"trajectories_{method}.png")
+    plt.colorbar(p)
+    axs[1].set_title("Electric Potential (V)", fontsize=14)
+    axs[1].set_xlabel("x", fontsize=13)
+    axs[1].set_ylabel("y", fontsize=13)
 
     # fields.plot_E_field()
     # plt.savefig("electric_field.png")
 
     # fields.plot_contour_V()
     # plt.savefig("potential.png")
-
+    plt.tight_layout()
     plt.show()
