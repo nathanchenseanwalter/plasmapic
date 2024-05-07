@@ -23,7 +23,7 @@ class Particles:
         self.Q = Q
         self.M = M
         self.positions = np.zeros((n_particles, 2))
-        self.positions[:, 1] = 0.0055
+        self.positions[:, 1] = height / 2
         self.velocities = np.zeros((n_particles, 2))
         self.velocities[:, 0] = v0
 

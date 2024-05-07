@@ -79,7 +79,7 @@ def leapfrog(x, v, a, dt, use_verlet=False):
     if use_verlet:
         # Velocity Verlet algorithm
         x_new = x + v * dt + 0.5 * a(x) * dt**2
-        v_new = v + 0.5 * (a + a) * dt
+        v_new = v + 0.5 * (a(x) + a(x_new)) * dt
     else:
         # Leapfrog algorithm
         v_half = v + 0.5 * a(x) * dt

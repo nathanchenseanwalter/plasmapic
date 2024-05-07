@@ -24,11 +24,11 @@ if __name__ == "__main__":
 
     # Set up grid parameters
     h = 1e-4
-    length = 0.05
-    height = 0.02
+    length = 0.1
+    height = 0.05
     h_wall = height / 5
     w_wall = length / 5
-    x_wall = 0.01
+    x_wall = 0.2
 
     # Set electric potentials
     Vin = 1100
@@ -36,14 +36,19 @@ if __name__ == "__main__":
     Vwall = 1000
     v0 = 100  # initial velocity of the ions (m/s)
 
-    dt = h * 10 / np.sqrt(2 * Q * (Vin - Vout) / M)
+    dt = 100 * h * 1 / np.sqrt(2 * Q * (Vin - Vout) / M)
     print("dt = ", dt)
 
     # Set up the simulation parameters
     n_particles = 1
     n_steps = 10000
 
-    pushers = {"euler": euler, "rk4": rk4, "leapfrog": leapfrog}
+    pushers = {
+        "euler": euler,
+        "rk4": rk4,
+        "leapfrog": leapfrog,
+        "verlet": lambda x, v, a, dt: leapfrog(x, v, a, dt, use_verlet=True),
+    }
     print(f"Using {methods} method for integration")
 
     fig, axs = plt.subplots(1, 2, figsize=(10, 5))
