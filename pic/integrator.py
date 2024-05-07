@@ -62,7 +62,7 @@ def rk4(x, v, a, dt):
     return x_new, v_new
 
 
-def leapfrog(x, v, a, dt, use_verlet=True):
+def leapfrog(x, v, a, dt, use_verlet=False):
     """
     Implements the leapfrog algorithm for particle pushing.
 

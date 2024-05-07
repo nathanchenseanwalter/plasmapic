@@ -43,11 +43,16 @@ if __name__ == "__main__":
     n_particles = 1
     n_steps = 10000
 
-    pushers = {"euler": euler, "rk4": rk4, "leapfrog": leapfrog}
+    pushers = {
+        "euler": euler,
+        "rk4": rk4,
+        "leapfrog": leapfrog,
+        "verlet": lambda x, v, a, dt: leapfrog(x, v, a, dt, use_verlet=True),
+    }
     print(f"Using {methods} method for integration")
 
     fig, ax = plt.subplots()
-    colors = ["red", "blue", "green"]
+    # colors = ["red", "blue", "green"]
     plt.figure()
     for i, method in enumerate(methods):
         pusher = pushers[method]
@@ -92,7 +97,9 @@ if __name__ == "__main__":
 
         for j in range(n_particles):
             paths[j] = np.array(paths[j])
-            plt.plot(paths[j][:-2, 0], paths[j][:-2, 1], linewidth=3, color=colors[i])
+            plt.plot(
+                paths[j][:-2, 0], paths[j][:-2, 1], linewidth=3
+            )  # , color=colors[i])
     fields.plot_contour_V(new_fig=False)
     plt.gca().add_patch(
         plt.Rectangle(
