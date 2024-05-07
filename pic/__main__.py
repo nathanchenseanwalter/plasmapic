@@ -28,7 +28,7 @@ if __name__ == "__main__":
     height = 0.05
     h_wall = height / 5
     w_wall = length / 5
-    x_wall = 0.04
+    x_wall = 0.2
 
     # Set electric potentials
     Vin = 1100
