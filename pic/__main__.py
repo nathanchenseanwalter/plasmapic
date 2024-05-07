@@ -24,7 +24,7 @@ if __name__ == "__main__":
 
     # Set up grid parameters
     h = 1e-4
-    length = 0.1
+    length = 0.05
     height = 0.02
     h_wall = height / 5
     w_wall = length / 5
