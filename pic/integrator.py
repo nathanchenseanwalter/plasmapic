@@ -84,41 +84,44 @@ def leapfrog(x, v, a, dt, use_verlet=False):
         # Leapfrog algorithm
         v_half = v + 0.5 * a(x) * dt
         x_new = x + v_half * dt
-        v_new = v_half + 0.5 * a(x) * dt
+        v_new = v_half + 0.5 * a(x_new) * dt
 
     return x_new, v_new
 
+
 def tajima_implicit(x, v, E, B, q, m, dt):
-    
-    v_minus_half = v - 0.5*q/m*E*dt;
-    
+
+    v_minus_half = v - 0.5 * q / m * E * dt
+
     B_mag = np.linalg.norm(B)
-    
-    eps = q*B_mag/m*dt/2 # = omega*dt/2
-    R = 1/B_mag * np.array([[0, B[2], -B[1]], [-B[2], 0, B[0]], [B[1], -B[0], 0]])
-    
+
+    eps = q * B_mag / m * dt / 2  # = omega*dt/2
+    R = 1 / B_mag * np.array([[0, B[2], -B[1]], [-B[2], 0, B[0]], [B[1], -B[0], 0]])
+
     M_minus = np.eye(3) - R * eps
     M_plus = np.eye(3) + R * eps
-    M_inv = np.linalg.inv(M_minus) # matrix inversion
-    
-    v = M_inv @ (M_plus @ v_minus_half) + M_inv @ E * q/m * dt
-    x = x + v*dt
-    
+    M_inv = np.linalg.inv(M_minus)  # matrix inversion
+
+    v = M_inv @ (M_plus @ v_minus_half) + M_inv @ E * q / m * dt
+    x = x + v * dt
+
     return x, v
 
+
 def tajima_explicit(x, v, E, B, q, m, dt):
-    
-    v_minus_half = v - 0.5*q/m*E*dt;
-    
+
+    v_minus_half = v - 0.5 * q / m * E * dt
+
     B_mag = np.linalg.norm(B)
-    
-    eps = q*B_mag/m*dt/2 # = omega*dt/2
-    R = 1/B_mag * np.array([[0, B[2], -B[1]], [-B[2], 0, B[0]], [B[1], -B[0], 0]])
-    
-    v = q/m*E*dt/2 + (np.eye(3) + R * eps) @ (v_minus_half + q/m*dt/2*E)
-    x = x + v*dt
-    
-    return x,
+
+    eps = q * B_mag / m * dt / 2  # = omega*dt/2
+    R = 1 / B_mag * np.array([[0, B[2], -B[1]], [-B[2], 0, B[0]], [B[1], -B[0], 0]])
+
+    v = q / m * E * dt / 2 + (np.eye(3) + R * eps) @ (v_minus_half + q / m * dt / 2 * E)
+    x = x + v * dt
+
+    return (x,)
+
 
 def boris(x, v, E, B, q, m, dt):
     """

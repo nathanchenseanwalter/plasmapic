@@ -24,11 +24,11 @@ if __name__ == "__main__":
 
     # Set up grid parameters
     h = 1e-4
-    length = 0.05
+    length = 0.07
     height = 0.02
     h_wall = height / 5
     w_wall = length / 5
-    x_wall = 0.01
+    x_wall = 0.05
 
     # Set electric potentials
     Vin = 1100
@@ -36,7 +36,7 @@ if __name__ == "__main__":
     Vwall = 1000
     v0 = 100  # initial velocity of the ions (m/s)
 
-    dt = h * 1 / np.sqrt(2 * Q * (Vin - Vout) / M)
+    dt = 1e-7  # h * 1 / np.sqrt(2 * Q * (Vin - Vout) / M)
     print("dt = ", dt)
 
     # Set up the simulation parameters
@@ -45,7 +45,6 @@ if __name__ == "__main__":
 
     pushers = {"euler": euler, "rk4": rk4, "leapfrog": leapfrog}
     print(f"Using {methods} method for integration")
-
 
     fig, ax = plt.subplots()
     colors = ["red", "blue", "green"]
@@ -104,16 +103,14 @@ if __name__ == "__main__":
             facecolor="none",
         )
     )
-        # plt.gca().set_xlim([0, length])
-        # plt.gca().set_ylim([0, height])
-        # plt.savefig(f"trajectories_{method}.png")
+    # plt.gca().set_xlim([0, length])
+    # plt.gca().set_ylim([0, height])
+    # plt.savefig(f"trajectories_{method}.png")
 
-        # fields.plot_E_field()
-        # plt.savefig("electric_field.png")
+    # fields.plot_E_field()
+    # plt.savefig("electric_field.png")
 
-        # fields.plot_contour_V()
-        # plt.savefig("potential.png")
-
-        
+    # fields.plot_contour_V()
+    # plt.savefig("potential.png")
 
     plt.show()

@@ -29,9 +29,13 @@ class ElectricField:
         self.Ex, self.Ey = self.solve_E()
         print(f"Time to find E:  {(time.time() - t0):.5f} seconds")
         t0 = time.time()
-        self.fEx = interp2d(self.grid.Xs[0], self.grid.Ys[:, 0], self.Ex, kind="linear")
-        self.fEy = interp2d(self.grid.Xs[0], self.grid.Ys[:, 0], self.Ey, kind="linear")
-        self.fV = interp2d(self.grid.Xs[0], self.grid.Ys[:, 0], self.V, kind="linear")
+        self.fEx = interp2d(
+            self.grid.Xs[0], self.grid.Ys[:, 0], self.Ex, kind="quintic"
+        )
+        self.fEy = interp2d(
+            self.grid.Xs[0], self.grid.Ys[:, 0], self.Ey, kind="quintic"
+        )
+        self.fV = interp2d(self.grid.Xs[0], self.grid.Ys[:, 0], self.V, kind="quintic")
         print(f"Time to interpolate E:  {(time.time() - t0):.5f} seconds")
 
     def solve_V(self):
@@ -53,7 +57,7 @@ class ElectricField:
     def get_field_at(self, x):
         """Return the electric field at a given position."""
         return np.array([self.fEx(x[0], x[1]), self.fEy(x[0], x[1])]).flatten()
-    
+
     def get_potential_at(self, x):
         """Return the potential at a given position."""
         return self.fV(x[0], x[1])
