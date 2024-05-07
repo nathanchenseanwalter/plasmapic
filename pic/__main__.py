@@ -24,11 +24,11 @@ if __name__ == "__main__":
 
     # Set up grid parameters
     h = 1e-4
-    length = 0.07
-    height = 0.02
+    length = 0.1
+    height = 0.05
     h_wall = height / 5
     w_wall = length / 5
-    x_wall = 0.05
+    x_wall = 0.04
 
     # Set electric potentials
     Vin = 1100
@@ -36,7 +36,7 @@ if __name__ == "__main__":
     Vwall = 1000
     v0 = 100  # initial velocity of the ions (m/s)
 
-    dt = 1e-7  # h * 1 / np.sqrt(2 * Q * (Vin - Vout) / M)
+    dt = 100 * h * 1 / np.sqrt(2 * Q * (Vin - Vout) / M)
     print("dt = ", dt)
 
     # Set up the simulation parameters
