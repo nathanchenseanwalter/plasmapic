@@ -140,6 +140,7 @@ if __name__ == "__main__":
                 ax.set_xlabel("x", fontsize=13)
                 ax.set_ylabel("y", fontsize=13)
                 ax.set_title("Exact vs Euler Solution", fontsize=14)
+                fig.tight_layout()
                 fig.savefig("analytic.png")
                 analytic_plotted = True
         print(dt_arr)
