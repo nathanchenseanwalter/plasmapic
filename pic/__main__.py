@@ -20,8 +20,19 @@ if __name__ == "__main__":
     from pic.integrator import euler, rk4, leapfrog
     from pic.particle import Q, M
 
+    def analytical(q, E, t, m, v_0, h_0):
+        x = 0.5 * q * E * t ** 2 / m + np.array([v_0 * t, 0]) + np.array([0, h_0])
+        return x
+    
+    def l2_error(f, g):
+        error = np.sqrt(((f - g) ** 2).mean())
+        return error
+    
+    def max_error(f, g):
+        return np.max(f - g)
+
     # Set up the simulation parameters
-    n_particles = 10
+    n_particles = 1
     n_steps = 2000
 
     pusher = {"euler": euler, "rk4": rk4, "leapfrog": leapfrog}[method]
@@ -43,60 +54,82 @@ if __name__ == "__main__":
 
     dt = h / np.sqrt(2 * Q * (Vin - Vout) / M)
     print("dt = ", dt)
+    
 
     # Initialize the objects
-    grid = Grid(h, length, height, h_wall, w_wall, x_wall, Vin, Vout, Vwall)
-    particles = Particles(n_particles, height, v0)
-    fields = ElectricField(grid)
+    
 
-    plt.figure()
-    paths = {}
-    energies = {}
-    for k in range(n_steps):
-        if k == 0:
-            for j in range(n_particles):
-                paths[j] = [np.array(particles.get_position(j))]
-                r = particles.get_position(j)
-                v = particles.get_velocity(j)
-                K = 0.5 * particles.M * np.linalg.norm(v) ** 2
-                U = particles.Q * fields.get_field_at(r)
-                energies[j] = [K + U]
+    # plt.figure()
+    
+    dt_arr = np.array([h * scale / np.sqrt(2 * Q * (Vin - Vout) / M) for scale in np.arange(10, 10000, 1000)])
 
-        particles.push(pusher, fields, dt, grid)
-        for j in range(n_particles):
-            paths[j].append(np.array(particles.get_position(j)))
-            r = particles.get_position(j)
-            v = particles.get_velocity(j)
-            K = 0.5 * particles.M * np.linalg.norm(v) ** 2
-            U = particles.Q * fields.get_field_at(r)
-            energies[j].append(K + U)
-    for j in range(n_particles):
-        paths[j] = np.array(paths[j])
-        plt.plot(paths[j][:, 0], paths[j][:, 1], linewidth=3, color="r")
-    fields.plot_contour_V(new_fig=False)
-    plt.gca().add_patch(
-        plt.Rectangle(
-            (grid.x_wall, 0),
-            grid.w_wall,
-            grid.h_wall,
-            edgecolor="k",
-            facecolor="none",
-        )
-    )
-    plt.savefig(f"trajectories_{method}.png")
+    for method in ["euler", "rk4", "leapfrog"]:
+        pusher = {"euler": euler, "rk4": rk4, "leapfrog": leapfrog}[method]
+        grid = Grid(h, length, height, h_wall, w_wall, x_wall, Vin, Vout, Vwall)
+        particles = Particles(n_particles, height, v0)
+        fields = ElectricField(grid)
+        paths = {}
+        energies = {}
+        analytical_sol = []
+        errors = []
+        t = 0
+        for dt in dt_arr:
+            for k in range(n_steps):
 
-    fields.plot_E_field()
-    plt.savefig("electric_field.png")
+                
+                
+                if k == 0:
+                    for j in range(n_particles):
+                        paths[j] = [np.array(particles.get_position(j))]
+                        r = particles.get_position(j)
+                        v = particles.get_velocity(j)
+                        K = 0.5 * particles.M * np.linalg.norm(v) ** 2
+                        U = particles.Q * fields.get_potential_at(r)
+                        analytical_sol = [analytical(Q, fields.get_field_at(r), t, M, v0, r[1])]
+                        energies[j] = [K + U]
+                        # analytical_sol[j, k] = analytical(Q, fields.get_field_at(r), t, M, v0, r[1])
+                        # print(analytical(Q, fields.get_field_at(r), t, M, v0, r[1]))
 
-    fields.plot_contour_V()
-    plt.savefig("potential.png")
+                particles.push(pusher, fields, dt, grid)
+                for j in range(n_particles):
+                    paths[j].append(np.array(particles.get_position(j)))
+                    r = particles.get_position(j)
+                    v = particles.get_velocity(j)
+                    K = 0.5 * particles.M * np.linalg.norm(v) ** 2
+                    U = particles.Q * fields.get_potential_at(r)
+                    energies[j].append(K + U)
+                
+                    analytical_sol.append(analytical(Q, fields.get_field_at(r), t, M, v0, r[1]))
+                t += dt
 
-    plt.figure()
-    for j in range(n_particles):
-        E = energies[j]
-        plt.plot(np.arange(len(E)), E, label=f"particle {j}")
-        plt.xlabel("step number")
-        plt.ylabel("Total Energy")
-        plt.legend()
+                if r[0] >= length:
+                    break
+            
+            analytical_sol = np.array(analytical_sol)
+            errors.append(max_error(analytical_sol[:, 0], np.array(paths[0])[:, 0]))
+            # for j in range(n_particles):
+            #     paths[j] = np.array(paths[j])
+            #     plt.plot(paths[j][:, 0], paths[j][:, 1], linewidth=3, color="r", label="euler solution")
+            #     plt.plot(analytical_sol[:, 0], analytical_sol[:, 1], label="exact solution")
+
+            # plt.xlabel("x", fontsize=13)
+            # plt.ylabel("y", fontsize=13)
+            # plt.title("Exact vs Euler Solution", fontsize=14)
+
+        plt.loglog(dt_arr[2:], errors[2:], '--o', label=method, alpha=0.5)
+        plt.xlabel("dt", fontsize=14)
+        plt.ylabel("max error", fontsize=14)
+    plt.legend()
+
+    # fields.plot_contour_V(new_fig=False)
+    # plt.gca().add_patch(
+    #     plt.Rectangle(
+    #         (grid.x_wall, 0),
+    #         grid.w_wall,
+    #         grid.h_wall,
+    #         edgecolor="k",
+    #         facecolor="none",
+    #     )
+    # )
 
     plt.show()

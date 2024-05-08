@@ -94,12 +94,12 @@ class Grid:
                     b[id] = self.Vout
 
                 # Wall Boundary Condition
-                elif (
-                    i >= int(self.x_wall / h)
-                    and i <= int((self.x_wall + self.w_wall) / h)
-                ) and (j <= int(self.h_wall / h)):
-                    data.append(np.array([id, id, 1]))
-                    b[id] = self.Vwall
+                # elif (
+                #     i >= int(self.x_wall / h)
+                #     and i <= int((self.x_wall + self.w_wall) / h)
+                # ) and (j <= int(self.h_wall / h)):
+                #     data.append(np.array([id, id, 1]))
+                #     b[id] = self.Vwall
 
                 # Neumann Boundary Condition at bottom
                 elif j == 0:

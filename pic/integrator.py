@@ -84,7 +84,7 @@ def leapfrog(x, v, a, dt, use_verlet=False):
         # Leapfrog algorithm
         v_half = v + 0.5 * a(x) * dt
         x_new = x + v_half * dt
-        v_new = v_half + 0.5 * a(x) * dt
+        v_new = v_half + 0.5 * a(x_new) * dt
 
     return x_new, v_new
 
