@@ -148,9 +148,9 @@ if __name__ == "__main__":
         p = np.polyfit(x=np.log(dt_arr), y=np.log(errors), deg=1)
         print(p)
 
-        ax2.loglog(dt_arr, np.abs(errors), "o", label=method, alpha=0.5)
-        ax2.set_xlabel("dt", fontsize=14)
-        ax2.set_ylabel("max error", fontsize=14)
+        # ax2.loglog(dt_arr, np.abs(errors), "o", label=method, alpha=0.5)
+        # ax2.set_xlabel("dt", fontsize=14)
+        # ax2.set_ylabel("max error", fontsize=14)
     ax2.legend()
 
     # fields.plot_contour_V(new_fig=False)
