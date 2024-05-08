@@ -59,7 +59,7 @@ if __name__ == "__main__":
                 r = particles.get_position(j)
                 v = particles.get_velocity(j)
                 K = 0.5 * particles.M * np.linalg.norm(v) ** 2
-                U = particles.Q * fields.get_field_at(r)
+                U = particles.Q * fields.get_potential_at(r)
                 energies[j] = [K + U]
 
         particles.push(pusher, fields, dt, grid)
@@ -68,7 +68,7 @@ if __name__ == "__main__":
             r = particles.get_position(j)
             v = particles.get_velocity(j)
             K = 0.5 * particles.M * np.linalg.norm(v) ** 2
-            U = particles.Q * fields.get_field_at(r)
+            U = particles.Q * fields.get_potential_at(r)
             energies[j].append(K + U)
     for j in range(n_particles):
         paths[j] = np.array(paths[j])
