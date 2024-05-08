@@ -56,7 +56,7 @@ if __name__ == "__main__":
     fig, axs = plt.subplots(1, 2, figsize=(10, 5))
     colors = ["red", "blue", "green"]
     linestyles = ["-", "-", "--"]
-    fig_conv, axs_conv = plt.subplots(1, 1, figsize=(5, 5))
+    fig_conv, axs_conv = plt.subplots(1, 1, figsize=(6, 6))
     E_diffs = []
     dts = []
     for dt in [dt, dt / 10, dt / 100]:
@@ -132,6 +132,7 @@ if __name__ == "__main__":
     axs_conv.set_xlabel("dt (s)")
     axs_conv.set_ylabel("Initial E - Final E (J))")
     axs_conv.set_title("Euler Energy Loss versus timestep size")
+    fig_conv.tight_layout()
     fig_conv.savefig("Euler_energy_loss_co")
 
     p = axs[1].contourf(fields.grid.Xs, fields.grid.Ys, fields.V, 20)
