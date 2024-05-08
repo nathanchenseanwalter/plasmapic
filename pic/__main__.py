@@ -10,7 +10,6 @@ if __name__ == "__main__":
         methods = [str(sys.argv[i]) for i in range(1, len(sys.argv))]
     else:
         methods = ["rk4"]
-
     import numpy as np
 
     np.set_printoptions(threshold=np.inf, edgeitems=30, linewidth=100000)
@@ -51,8 +50,8 @@ if __name__ == "__main__":
     }
     print(f"Using {methods} method for integration")
 
-    if len(methods) > 1:
-        raise ValueError("please only run with one method on this branch!")
+    if len(methods) > 1 or methods[0] != "euler":
+        raise ValueError("please only run with euler on this branch!")
 
     fig, axs = plt.subplots(1, 2, figsize=(10, 5))
     colors = ["red", "blue", "green"]
