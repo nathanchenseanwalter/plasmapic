@@ -70,6 +70,10 @@ if __name__ == "__main__":
             K = 0.5 * particles.M * np.linalg.norm(v) ** 2
             U = particles.Q * fields.get_potential_at(r)
             energies[j].append(K + U)
+
+        if r[0] >= length:
+            break
+        
     for j in range(n_particles):
         paths[j] = np.array(paths[j])
         plt.plot(paths[j][:, 0], paths[j][:, 1], linewidth=3, color="r")

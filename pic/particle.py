@@ -60,7 +60,6 @@ class Particles:
                 v_new[1] = -v_new[1]
             elif right_boundary:
                 v_new = np.array([0, 0])
-                x_new = x.copy()
             elif wall:
                 # if the particle passed throught the top wall
                 if x[1] >= grid.h_wall and x_new[1] <= grid.h_wall:
